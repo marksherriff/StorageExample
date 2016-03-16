@@ -1,12 +1,16 @@
 package cs4720.cs.virginia.edu.storageexample;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import java.io.FileInputStream;
@@ -75,6 +79,57 @@ public class MainActivity extends Activity {
             Log.e("StorageExample", e.getMessage());
         }
 
+    }
+
+    public void saveToDB(View view) {
+        // Gets the data repository in write mode
+        DatabaseHelper mDbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        EditText editText = (EditText)findViewById(R.id.editText);
+        EditText editText2 = (EditText)findViewById(R.id.editText2);
+        String compid = editText.getText().toString();
+        String name = editText2.getText().toString();
+        values.put("compid", compid);
+        values.put("name", name);
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId;
+        newRowId = db.insert(
+                "my_table",
+                null,
+                values);
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "compid",
+                "name"
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                "compid" + " DESC";
+
+        Cursor cursor = db.query(
+                "my_table",  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        //cursor.moveToFirst();
+        while(cursor.moveToNext()) {
+            String currID = cursor.getString(
+                    cursor.getColumnIndexOrThrow("compid")
+            );
+            Log.i("DBData", currID);
+        }
     }
 
     @Override
