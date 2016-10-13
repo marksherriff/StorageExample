@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         editText.setText(editTextValue);
 
         // Restore file
-        String FILENAME = "hello_file";
+        String FILENAME = "hello_file2";
         EditText editText2 = (EditText)findViewById(R.id.editText2);
 
         try {
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
         editor.commit();
 
         // Using a file
-        String FILENAME = "hello_file";
+        String FILENAME = "hello_file2";
         EditText editText2 = (EditText)findViewById(R.id.editText2);
         String string = editText2.getText().toString();
         try {
